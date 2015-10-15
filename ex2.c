@@ -54,11 +54,11 @@ int main(void)
 
   /* Enable interrupt handling */
 
+
+
+  *SCR = 2;
+
   setupNVIC();
-
-
-
-  *SCR = 6;
 
   __asm volatile("wfi");
 
@@ -84,9 +84,13 @@ void setupNVIC()
 
 {
 
-  //*ISER0 = 0x802;
+  *ISER0 |= (1 << 12);
 
-  //*ISER0  |= 1 << 12;
+  *ISER0 = 0x802;
+
+  // *ISER0 |= (1 << 11);
+
+  // *ISER0 |= (1 << 1);
 
   /* TODO use the NVIC ISERx registers to enable handling of interrupt(s)
 
