@@ -20,29 +20,23 @@ uint16_t sound3();
 
 uint16_t sound4();
 
-int m = 0;
+void resetCounter();
+
+
+
+
 
 uint16_t sample;
 
-uint16_t z = 0x888;
 
-uint16_t n = 0xfff;
 
-int x = 0;
+int play = 1;
 
-int k = 0;
 
-int freq1 = 20;
 
-int freq4 = 200;
 
-int sound1Length = 25000;
 
-int sound2Length = 100000;
 
-int sound3Length = 30000;
-
-int sound4Length = 25000;
 
 
 
@@ -60,7 +54,31 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler(int sound)
 
 
 
-	sample = sound1();
+	if(play==1 || play == 5){
+
+		sample = sound1();
+
+	}
+
+	 else if(play==2 || play == 6){
+
+		sample = sound2();
+
+	}
+
+	else if(play==3 || play == 7){
+
+		sample = sound3();
+
+	}
+
+	else if(play==4 || play == 8){
+
+		sample = sound4();
+
+	}
+
+
 
 
 
@@ -86,7 +104,7 @@ void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler()
 
 {
 
-	*GPIO_IFC = 0x1;
+	*GPIO_IFC = 0xff;
 
 	button_handler();
 
@@ -102,9 +120,11 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 
 {
 
-	*GPIO_IFC = 0x1;
+	*GPIO_IFC = 0xff;
 
 	button_handler();
+
+	//(*GPIO_PA_DOUT)++;
 
 	
 
@@ -118,13 +138,15 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 
 void button_handler(){
 
-	uint8_t input = button_mapper();
+	int input = button_mapper();
 
 	if(input!=0){
 
-		*GPIO_PA_DOUT= *GPIO_PC_DIN <<8;
+		*GPIO_PA_DOUT= (*GPIO_PC_DIN <<8);
 
-		//sound1();
+		resetCounter();
+
+		play = input;
 
 	}
 
@@ -204,391 +226,7 @@ uint8_t button_mapper(){
 
 
 
-uint16_t sound4(){
 
-	if(k<=sound4Length){
-
-		if(m<=25000){
-
-			m+=1;
-
-			x+=1;
-
-			if(m%4000==0){
-
-				freq4-=5; 
-
-			}
-
-			if(x<=freq1){
-
-				z = z+n;
-
-			}
-
-			else if(x<=freq4*2){
-
-				z = z-n;
-
-			}
-
-			else{
-
-				x=0;
-
-			}
-
-		}
-
-		else{
-
-		 	m=0;
-
-		}
-
-		k++;
-
-	}
-
-	else{
-
-		//k = 0;
-
-	} 
-
-	return z;
-
-}
-
-
-
-
-
-uint16_t sound3(){
-
-	if(k<=sound3Length){
-
-		if(m<=7500){
-
-			m+=1;
-
-			x+=1;
-
-			if(x<=40){
-
-				z = z+n;
-
-			}
-
-			else if(x<=80){
-
-				z = z-n;
-
-			}
-
-			else{
-
-				x=0;
-
-			}
-
-		}
-
-		else if(m>7500 && m<=15000){
-
-				m+=1;
-
-				x+=1;
-
-			if(x<=30){
-
-				z = z+n;
-
-			}
-
-			else if(x<=60){ 
-
-				z = z-n;
-
-			}
-
-			else{
-
-				x=0;
-
-			}
-
-		}
-
-		else if(m>15000 && m<=22500){
-
-				m+=1;
-
-				x+=1;
-
-			if(x<=20){
-
-				z = z+n;
-
-			}
-
-			else if(x<=40){ 
-
-				z = z-n;
-
-			}
-
-			else{
-
-				x=0;
-
-			}
-
-		}
-
-		else if(m>22500 && m<=30000){
-
-				m+=1;
-
-				x+=1;
-
-			if(x<=10){
-
-				z = z+n;
-
-			}
-
-			else if(x<=20){ 
-
-				z = z-n;
-
-			}
-
-			else{
-
-				x=0;
-
-			}
-
-		}
-
-		else{
-
-			m=0;
-
-		}
-
-	k++;
-
-	}
-
-	else{
-
-		//k=0;
-
-	}
-
-	return z;
-
-}
-
-
-
-
-
-
-
-
-
-uint16_t sound2(){
-
-	if(k<=sound2Length){
-
-		if(m<=20000){
-
-			m+=1;
-
-			x+=1;
-
-			if(x<=50){
-
-				z = z+n;
-
-			}
-
-			else if(x<=100){
-
-				z = z-n;
-
-			}
-
-			else{
-
-				x=0;
-
-			}
-
-		}
-
-		else if(m>20000 && m<=40000){
-
-				m+=1;
-
-				x+=1;
-
-			if(x<=75){
-
-				z = z+n;
-
-			}
-
-			else if(x<=150){ 
-
-				z = z-n;
-
-			}
-
-			else{
-
-				x=0;
-
-			}
-
-		}
-
-		else if(m>40000 && m<=60000){
-
-				m+=1;
-
-				x+=1;
-
-			if(x<=80){
-
-				z = z+n;
-
-			}
-
-			else if(x<=160){ 
-
-				z = z-n;
-
-			}
-
-			else{
-
-				x=0;
-
-			}
-
-		}
-
-		else if(m>60000 && m<=80000){
-
-				m+=1;
-
-				x+=1;
-
-			if(x<=100){
-
-				z = z+n;
-
-			}
-
-			else if(x<=200){ 
-
-				z = z-n;
-
-			}
-
-			else{
-
-				x=0;
-
-			}
-
-		}
-
-		else{
-
-			m=0;
-
-		}
-
-		k++;
-
-	}
-
-	else{
-
-		k=0;
-
-	}
-
-	return z;
-
-
-
-}
-
-
-
-
-
-uint16_t sound1(){
-
-	if(k<=sound1Length){
-
-		if(m<=25000){
-
-			m+=1;
-
-			x+=1;
-
-			if(m%1000==0){
-
-				freq1+=5; 
-
-			}
-
-			if(x<=freq1){
-
-				z = z+n;
-
-			}
-
-			else if(x<=freq1*2){
-
-				z = z-n;
-
-			}
-
-			else{
-
-				x=0;
-
-			}
-
-		}
-
-		else{
-
-		 	m=0;
-
-		}
-
-		k++;
-
-	}
-
-	else{
-
-		//k = 0;
-
-	} 
-
-	return z;
-
-}
 
 
 
