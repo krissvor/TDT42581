@@ -22,7 +22,7 @@
 
 /* The period between sound samples, in clock cycles */
 
-#define   SAMPLE_PERIOD   44000000
+#define   SAMPLE_PERIOD   317
 
 
 
@@ -58,8 +58,6 @@ int main(void)
 
 
 
-
-
   *SCR = 6;
 
   __asm volatile("wfi");
@@ -86,9 +84,9 @@ void setupNVIC()
 
 {
 
-  *ISER0 = 0x802;
+  //*ISER0 = 0x802;
 
-  *ISER0  |= 1 << 12;
+  //*ISER0  |= 1 << 12;
 
   /* TODO use the NVIC ISERx registers to enable handling of interrupt(s)
 
